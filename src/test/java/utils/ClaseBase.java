@@ -1,18 +1,10 @@
 package utils;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
-import org.testng.Assert;
-
-import java.time.Duration;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 public class ClaseBase {
     private WebDriver driver;
@@ -30,14 +22,38 @@ public class ClaseBase {
         return driver.findElement(locator);
     }
 
-    public void click(WebElement element) {
-        element.click();
+    public void clic(By selector) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            wait.until(ExpectedConditions.presenceOfElementLocated(selector));
+            wait.until(ExpectedConditions.elementToBeClickable(selector)).click();
+        }catch (Exception e) {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            try {
+                WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(selector));
+                js.executeScript("arguments[0].click;", element);
+            } catch (Exception ex) {
+                throw new NotFoundException(ex);
+            }
+        }
     }
 
-    public void doubleClick(By locator) {
-        Actions action = new Actions(driver);
-        WebElement elemento = driver.findElement(locator);
-        action.doubleClick(elemento).perform();
+    public void agregarTexto(By locator, String texto) {
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement elemento = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+            elemento.clear();
+            elemento.sendKeys(texto);
+        } catch (Exception e) {
+            try {
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                WebElement elemento = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+                js.executeScript("arguments[0].value= '';", elemento);
+                js.executeScript("arguments[0].value= arguments[1];", elemento, texto);
+            } catch (Exception ex) {
+                throw new NotFoundException(ex);
+            }
+        }
     }
 
     public void visitarSitio(String url) {
@@ -49,30 +65,18 @@ public class ClaseBase {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    public WebDriver ConexionChromeDriver() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-
-        driver.manage().timeouts().pageLoadTimeout(240, TimeUnit.SECONDS);
-        driver.manage().timeouts().setScriptTimeout(240, TimeUnit.SECONDS);
-
-        return driver;
-    }
-
     public Boolean estaDesplegado(By locator) {
         try {
+            WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(30));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
             return driver.findElement(locator).isDisplayed();
         } catch (NoSuchElementException e) {
-        return false;
+            return false;
         }
     }
 
     public void espera(int tiempo) throws InterruptedException {
         Thread.sleep(tiempo);
-    }
-
-    public void maximizarVentanaBrowser() {
-        driver.manage().window().maximize();
     }
 
     public void aceptarAlerta() {
@@ -86,5 +90,68 @@ public class ClaseBase {
         this.driver.close();
     }
 
-}
+    public void scrolldown(By locator) {
+        try {
+            WebElement element = driver.findElement(locator);
+            if (driver instanceof JavascriptExecutor) {
+                js.executeScript("arguments[0].scrollIntoView(true);", element);
+            } else {
+                throw new RuntimeException("El driver no soporta JavaScript");
+            }
+        } catch (Exception e) {
+           throw new RuntimeException("No se pudo hacer scroll al elemento: ", e);
+        }
+    }
 
+    public void scrollToElement(By locator) {
+        WebElement element = driver.findElement(locator);
+        js.executeScript("arguments[0].scrollIntoView(true);", element);
+    }
+
+    public String mainTab() {
+        return driver.getWindowHandle();
+    }
+
+    public void focus(String pestanaOriginal) {
+
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.numberOfWindowsToBe(2));
+
+        for (String windowHandle : driver.getWindowHandles()) {
+            if (!pestanaOriginal.contentEquals(windowHandle)) {
+                driver.switchTo().window(windowHandle);
+            }
+        }
+    }
+
+    public void focusOldTab(String mainTab) {
+        driver.switchTo().window(mainTab);
+    }
+
+    public void selectDropdownOptionByText(By locator, String visibleText) {
+        WebElement dropdownElement = driver.findElement(locator);
+        Select dropdown = new Select(dropdownElement);
+        dropdown.selectByVisibleText(visibleText);
+    }
+
+    public void selectDropdownOptionByValue(By locator, String value) {
+        WebElement dropdownElement = driver.findElement(locator);
+        Select dropdown = new Select(dropdownElement);
+        dropdown.selectByValue(value);
+    }
+
+    public void esperarCargaYDesaparicionLoader() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        By loader = By.cssSelector("div.loader");
+        while (true) {
+            try {
+                wait.until(ExpectedConditions.visibilityOfElementLocated(loader));
+                break;
+            } catch (TimeoutException e) {
+                break;
+            }
+        }
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(loader));
+    }
+
+}
