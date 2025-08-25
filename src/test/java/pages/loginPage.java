@@ -17,63 +17,22 @@ public class loginPage extends ClaseBase{
     By inputEmail = By.xpath("//div[@class='modal-content']//input[@id='loginusername']");
     By inputPassword = By.xpath("//div[@class='modal-content']//input[@id='loginpassword']");
     By btnLogin = By.xpath("//div[@class='modal-content']//button[text()='Log in']");
-    public By textoLoginExitoso = By.xpath("//a[text()='Welcome demo@test.com']");
 
     public void loginOK() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(30));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(modalLogin));
 
-            if (estaDesplegado(inputEmail)) {
-                WebElement txtEmail = this.buscarElemento(inputEmail);
-                txtEmail.clear();
-                txtEmail.sendKeys(Constants.USUARIO_VALIDO);
-            }
-
-            if (estaDesplegado(inputPassword)) {
-                WebElement txtPassword = this.buscarElemento(inputPassword);
-                txtPassword.clear();
-                txtPassword.sendKeys(Constants.CLAVE_VALIDA);
-            }
-
-            if (estaDesplegado(btnLogin)) {
-                try {
-                    WebElement botonLogin = this.buscarElemento(this.btnLogin);
-                    wait.until(ExpectedConditions.elementToBeClickable(botonLogin));
-                    botonLogin.click();
-
-                } catch (NoSuchElementException e) {
-                    throw e;
-                }
-            }
+        estaDesplegado(modalLogin);
+        agregarTexto(inputEmail, Constants.USUARIO_VALIDO);
+        agregarTexto(inputPassword, Constants.CLAVE_VALIDA);
+        clic(btnLogin);
     }
 
 
     public void loginNOK() throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(30));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(modalLogin));
-
-        if (estaDesplegado(inputEmail)) {
-            WebElement txtEmail = this.buscarElemento(inputEmail);
-            txtEmail.clear();
-            txtEmail.sendKeys(Constants.USUARIO_INVALIDO);
-        }
-
-        if (estaDesplegado(inputPassword)) {
-            WebElement txtPassword = this.buscarElemento(inputPassword);
-            txtPassword.clear();
-            txtPassword.sendKeys(Constants.CLAVE_INVALIDA);
-        }
-
-        if (estaDesplegado(btnLogin)) {
-            try {
-                WebElement botonLogin = this.buscarElemento(this.btnLogin);
-                wait.until(ExpectedConditions.elementToBeClickable(botonLogin));
-                botonLogin.click();
-
-            } catch (NoSuchElementException e) {
-                throw e;
-            }
-        }
+        estaDesplegado(modalLogin);
+        agregarTexto(inputEmail, Constants.USUARIO_INVALIDO);
+        agregarTexto(inputPassword, Constants.CLAVE_INVALIDA);
+        clic(btnLogin);
+        aceptarAlerta();
     }
 
 }

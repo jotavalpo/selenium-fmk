@@ -7,11 +7,14 @@ URL ambiente: https://demoblaze.com/
 Por primera vez:
 `mvn clean install -Dmaven.test.skip=true`
 
-Para ejecutar los tests:
+Para ejecutar los tests modo UI:
 `mvn clean test`
 
+Ejecutar tests modo headless:
+`mvn clean test -Dheadless=true`
+
 # Stack
-- Selenium WebDriver 4.10.0
-- Java min. versión 11
+- Selenium WebDriver 4.25.0
+- Java versión 11
 - Maven
 - TestNG

@@ -3,3 +3,9 @@ tarjet/
 
 /shelf/
 /.idea/workspace.xml
+
+/src/test/resources/descargas
+/src/test/resources/screenshots
+/test-output/
+/dependencies/
+/dependency-reduced-pom.xml
