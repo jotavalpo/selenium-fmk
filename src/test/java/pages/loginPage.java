@@ -1,14 +1,10 @@
 package pages;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import utils.ClaseBase;
+import utils.BasePage;
 import utils.Constants;
 
-import java.time.Duration;
-
-public class loginPage extends ClaseBase{
+public class loginPage extends BasePage {
     public loginPage(WebDriver driver) {
         super(driver);
     }

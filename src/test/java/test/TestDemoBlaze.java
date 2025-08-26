@@ -19,7 +19,7 @@ public class TestDemoBlaze {
     @BeforeMethod
     public void Before(ITestResult result) {
         TestUtil.imprimirNombrePrueba(result);
-        driver = startDriverChrome();
+        driver = startDriverEdge();
         loginP = new loginPage(driver);
         loginP.visitarSitio(Constants.URL_SITIO);
         homeP = new homePage(loginP.getDriver());

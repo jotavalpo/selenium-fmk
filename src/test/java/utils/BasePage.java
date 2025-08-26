@@ -6,11 +6,11 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
-public class ClaseBase {
+public class BasePage {
     private WebDriver driver;
     JavascriptExecutor js = (JavascriptExecutor) driver;
 
-    public ClaseBase(WebDriver driver) {
+    public BasePage(WebDriver driver) {
         this.driver = driver;
     }
 
