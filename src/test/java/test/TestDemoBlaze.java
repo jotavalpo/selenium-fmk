@@ -2,10 +2,17 @@ package test;
 
 import org.testng.Assert;
 import org.testng.annotations.*;
-import pages.*;
+import pages.homePage;
+import pages.loginPage;
 import utils.Constants;
 
 import org.openqa.selenium.WebDriver;
+import utils.TestUtil;
+import org.testng.ITestResult;
+
+import static utils.ConexionUtil.startDriverChrome;
+import static utils.ConexionUtil.startDriverEdge;
+import static utils.ConexionUtil.startDriverEdgeDos;
 
 public class TestDemoBlaze {
     WebDriver driver;
@@ -13,12 +20,11 @@ public class TestDemoBlaze {
     loginPage loginP;
 
     @BeforeMethod
-    public void Before() {
+    public void Before(ITestResult result) {
+        TestUtil.imprimirNombrePrueba(result);
+        driver = startDriverChrome();
         loginP = new loginPage(driver);
-        loginP.ConexionChromeDriver();
-        loginP.getDriver();
         loginP.visitarSitio(Constants.URL_SITIO);
-        loginP.maximizarVentanaBrowser();
         homeP = new homePage(loginP.getDriver());
 
     }
@@ -27,7 +33,6 @@ public class TestDemoBlaze {
     public void loginErroneo() throws InterruptedException {
         homeP.ingresarAPaginaDeLogin();
         loginP.loginNOK();
-        loginP.aceptarAlerta();
         boolean elLoginNoFueExitoso = loginP.estaDesplegado(loginP.modalLogin);
         Assert.assertTrue(elLoginNoFueExitoso, "Login sin éxito y modal aún visible esperando datos correctos");
     }
@@ -36,13 +41,13 @@ public class TestDemoBlaze {
     public void loginExitoso() throws InterruptedException {
         homeP.ingresarAPaginaDeLogin();
         loginP.loginOK();
-        homeP.validarBotonPostLogin();
-        boolean elLoginFueExitoso = loginP.estaDesplegado(loginP.textoLoginExitoso);
+        boolean elLoginFueExitoso = homeP.estaDesplegado(homeP.textoUsuarioAutenticado);
         Assert.assertTrue(elLoginFueExitoso, "Login con éxito y texto con datos de cuenta visible");
     }
 
     @AfterMethod
-    public void afterMethod() {
+    public void afterMethod(ITestResult result) {
+        TestUtil.imprimirResultadoPrueba(result, driver);
         loginP.cerrarBrowser();
     }
 
