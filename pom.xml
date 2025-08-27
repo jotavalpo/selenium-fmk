@@ -77,7 +77,6 @@
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
             <version>5.7.0</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

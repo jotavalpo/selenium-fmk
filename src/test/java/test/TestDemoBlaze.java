@@ -2,14 +2,17 @@ package test;
 
 import org.testng.Assert;
 import org.testng.annotations.*;
-import pages.*;
+import pages.homePage;
+import pages.loginPage;
 import utils.Constants;
 
 import org.openqa.selenium.WebDriver;
 import utils.TestUtil;
 import org.testng.ITestResult;
 
-import static utils.ConexionUtil.*;
+import static utils.ConexionUtil.startDriverChrome;
+import static utils.ConexionUtil.startDriverEdge;
+import static utils.ConexionUtil.startDriverEdgeDos;
 
 public class TestDemoBlaze {
     WebDriver driver;
@@ -19,7 +22,7 @@ public class TestDemoBlaze {
     @BeforeMethod
     public void Before(ITestResult result) {
         TestUtil.imprimirNombrePrueba(result);
-        driver = startDriverEdge();
+        driver = startDriverChrome();
         loginP = new loginPage(driver);
         loginP.visitarSitio(Constants.URL_SITIO);
         homeP = new homePage(loginP.getDriver());
