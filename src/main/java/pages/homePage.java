@@ -1,12 +1,9 @@
 package pages;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import utils.ClaseBase;
+import utils.BasePage;
 
-import java.time.Duration;
-
-public class homePage extends ClaseBase{
+public class homePage extends BasePage {
     public homePage(WebDriver driver) {
         super(driver);
     }

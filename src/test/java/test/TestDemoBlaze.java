@@ -2,14 +2,17 @@ package test;
 
 import org.testng.Assert;
 import org.testng.annotations.*;
-import pages.*;
+import pages.homePage;
+import pages.loginPage;
 import utils.Constants;
 
 import org.openqa.selenium.WebDriver;
 import utils.TestUtil;
 import org.testng.ITestResult;
 
-import static utils.ConexionUtil.*;
+import static utils.ConexionUtil.startDriverChrome;
+import static utils.ConexionUtil.startDriverEdge;
+import static utils.ConexionUtil.startDriverEdgeDos;
 
 public class TestDemoBlaze {
     WebDriver driver;
